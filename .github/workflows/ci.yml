@@ -22,9 +22,20 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y libjack-jackd2-dev jackd2
         # Start JACK with dummy driver (no audio hardware needed)
+        # Use --no-rt to disable realtime (not available in CI)
         export JACK_PROMISCUOUS_SERVER=1
-        jackd -R -d dummy &
-        sleep 2
+        export JACK_NO_AUDIO_RESERVATION=1
+        # Kill any existing JACK server
+        killall jackd 2>/dev/null || true
+        # Start JACK in non-realtime mode with dummy driver
+        jackd --no-rt -d dummy > /tmp/jackd.log 2>&1 &
+        sleep 3
+        # Verify JACK is running
+        if ! jack_lsp > /dev/null 2>&1; then
+          echo "JACK failed to start. Log:"
+          cat /tmp/jackd.log
+          exit 1
+        fi
     
     - name: Setup pnpm
       uses: pnpm/action-setup@v2
@@ -47,6 +58,9 @@ jobs:
       run: pnpm run build
     
     - name: Run tests
+      env:
+        JACK_PROMISCUOUS_SERVER: 1
+        JACK_NO_AUDIO_RESERVATION: 1
       run: pnpm test
     
     - name: Upload coverage to Codecov
