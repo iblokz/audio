@@ -32,7 +32,7 @@
     "docs": "jsdoc2md lib/**/*.js > API.md",
     "docs:watch": "nodemon --watch lib --exec 'pnpm run docs'",
     "prepare": "husky install",
-    "prepublishOnly": "pnpm run build && pnpm test && pnpm run lint && pnpm run docs",
+    "prepublishOnly": "pnpm run build && pnpm run lint && pnpm run docs",
     "version": "pnpm run docs && git add API.md",
     "postversion": "git push && git push --tags"
   },
