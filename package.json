@@ -1,0 +1,100 @@
+{
+  "name": "iblokz-audio",
+  "version": "0.1.0",
+  "description": "Web Audio API utilities and engine for building reactive audio applications",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "lib/",
+    "dist/",
+    "LICENSE",
+    "README.md",
+    "API.md",
+    "CHANGELOG.md"
+  ],
+  "engines": {
+    "node": ">=18.12.0"
+  },
+  "scripts": {
+    "build": "node build.js",
+    "lint": "eslint lib",
+    "test": "c8 mocha --colors --require test/setup.js test/**/*",
+    "docs": "jsdoc2md lib/**/*.js > API.md",
+    "docs:watch": "nodemon --watch lib --exec 'pnpm run docs'",
+    "prepare": "husky install",
+    "prepublishOnly": "pnpm run build && pnpm test && pnpm run lint && pnpm run docs",
+    "version": "pnpm run docs && git add API.md",
+    "postversion": "git push && git push --tags"
+  },
+  "c8": {
+    "include": [
+      "lib/**/*.js"
+    ],
+    "exclude": [
+      "test/**",
+      "build.js",
+      "dist/**"
+    ],
+    "reporter": [
+      "lcov",
+      "text",
+      "html"
+    ],
+    "all": true,
+    "check-coverage": false
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iblokz/audio.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iblokz/audio/issues"
+  },
+  "homepage": "https://github.com/iblokz/audio#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "c8": "^10.1.0",
+    "chai": "^4.3.10",
+    "esbuild": "^0.24.0",
+    "eslint": "^8.56.0",
+    "eslint-config-google": "^0.14.0",
+    "husky": "^8.0.3",
+    "jsdoc-to-markdown": "^8.0.0",
+    "jsdom": "^24.0.0",
+    "mocha": "^10.2.0",
+    "node-web-audio-api": "^1.0.7",
+    "nodemon": "^3.0.2"
+  },
+  "keywords": [
+    "audio",
+    "webaudio",
+    "web-audio-api",
+    "synthesizer",
+    "synthesis",
+    "vco",
+    "vca",
+    "vcf",
+    "adsr",
+    "lfo",
+    "reverb",
+    "sampler",
+    "music",
+    "sound",
+    "iblokz",
+    "reactive",
+    "audio-engine"
+  ]
+}
+

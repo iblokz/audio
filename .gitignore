@@ -1,0 +1,17 @@
+node_modules/
+coverage/
+.nyc_output/
+_site/
+dist/
+*.log
+.DS_Store
+.env
+
+# Session notes and summaries (local only)
+.notes/
+
+# Keep API.md but ignore generated HTML docs
+# docs/ folder contains markdown docs (keep it)
+# _site/ contains generated site (ignore it)
+# dist/ contains built CommonJS bundles (ignore it)
+

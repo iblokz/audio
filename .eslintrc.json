@@ -1,0 +1,37 @@
+{
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true,
+    "mocha": true
+  },
+  "extends": "google",
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "sourceType": "module"
+  },
+  "rules": {
+    "indent": ["error", "tab", {"SwitchCase": 1}],
+    "no-tabs": "off",
+    "max-len": ["warn", 120, {"tabWidth": 2}],
+    "no-nested-ternary": 0,
+    "operator-linebreak": 0,
+    "no-return-assign": ["error", "except-parens"],
+    "no-sequences": 0,
+    "dot-notation": 0,
+    "no-negated-condition": 0,
+    "no-unused-vars": ["warn", {"argsIgnorePattern": "^_"}],
+    "no-loop-func": 0,
+    "no-warning-comments": 0,
+    "valid-jsdoc": ["error", {
+      "prefer": {
+        "return": "returns"
+      },
+      "requireReturn": false
+    }],
+    "arrow-parens": ["error", "as-needed"],
+    "comma-dangle": ["error", "never"],
+    "prefer-const": "warn"
+  }
+}
+
