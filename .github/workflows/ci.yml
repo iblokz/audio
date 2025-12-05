@@ -17,6 +17,15 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
+    - name: Install and start JACK audio server
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libjack-jackd2-dev jackd2
+        # Start JACK with dummy driver (no audio hardware needed)
+        export JACK_PROMISCUOUS_SERVER=1
+        jackd -R -d dummy &
+        sleep 2
+    
     - name: Setup pnpm
       uses: pnpm/action-setup@v2
       with:
