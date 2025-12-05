@@ -14,25 +14,10 @@ jobs:
       with:
         fetch-depth: 0
     
-    - name: Install and start JACK audio server
+    - name: Install JACK audio libraries
       run: |
         sudo apt-get update
         sudo apt-get install -y libjack-jackd2-dev jackd2
-        # Start JACK with dummy driver (no audio hardware needed)
-        # Use --no-realtime to disable realtime (not available in CI)
-        export JACK_PROMISCUOUS_SERVER=1
-        export JACK_NO_AUDIO_RESERVATION=1
-        # Kill any existing JACK server
-        killall jackd 2>/dev/null || true
-        # Start JACK in non-realtime mode with dummy driver
-        jackd --no-realtime -d dummy > /tmp/jackd.log 2>&1 &
-        sleep 3
-        # Verify JACK is running
-        if ! jack_lsp > /dev/null 2>&1; then
-          echo "JACK failed to start. Log:"
-          cat /tmp/jackd.log
-          exit 1
-        fi
     
     - name: Setup pnpm
       uses: pnpm/action-setup@v2
@@ -52,11 +37,24 @@ jobs:
     - name: Build
       run: pnpm run build
     
-    - name: Run tests
+    - name: Start JACK and run tests
       env:
         JACK_PROMISCUOUS_SERVER: 1
         JACK_NO_AUDIO_RESERVATION: 1
-      run: pnpm test
+      run: |
+        # Kill any existing JACK server
+        killall jackd 2>/dev/null || true
+        # Start JACK in non-realtime mode with dummy driver
+        jackd --no-realtime -d dummy > /tmp/jackd.log 2>&1 &
+        sleep 3
+        # Verify JACK is running
+        if ! jack_lsp > /dev/null 2>&1; then
+          echo "JACK failed to start. Log:"
+          cat /tmp/jackd.log
+          exit 1
+        fi
+        # Run tests
+        pnpm test
     
     - name: Run linter
       run: pnpm run lint
