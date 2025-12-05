@@ -90,7 +90,20 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
     - name: Publish to npm
-      run: pnpm publish --no-git-checks
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        JACK_PROMISCUOUS_SERVER: 1
+        JACK_NO_AUDIO_RESERVATION: 1
+      run: |
+        # Start JACK for prepublishOnly script (which runs tests)
+        killall jackd 2>/dev/null || true
+        jackd --no-realtime -d dummy > /tmp/jackd.log 2>&1 &
+        sleep 3
+        if ! jack_lsp > /dev/null 2>&1; then
+          echo "JACK failed to start. Log:"
+          cat /tmp/jackd.log
+          exit 1
+        fi
+        # Publish (prepublishOnly will run tests)
+        pnpm publish --no-git-checks
 
